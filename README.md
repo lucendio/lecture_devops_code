@@ -1,13 +1,14 @@
 Terrafrom on mobile POC
 =======================
 
-This projects aims to implement a proof-of-concepts, of 
+This projects aims to implement a proof-of-concepts to allocate and provision virtual private 
+cloud applications from a mobile device.
 
 
 ## Requirements
 
 *   `make`
-*   `trerrafrom`
+*   `terrafrom`
 
 
 ## Preparations
