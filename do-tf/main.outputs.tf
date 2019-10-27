@@ -1,8 +1,8 @@
-output "Project Info" {
+output "project-info" {
   value = "${ var.projectId }: ${ var.projectDescription}"
 }
 
-output "VM Info" {
+output "vm-info" {
   value = "${ module.vm.vm-name } via ${ module.vm.vm-ipv4 }"
 }
 

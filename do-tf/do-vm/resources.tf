@@ -10,8 +10,6 @@ resource digitalocean_droplet "vm" {
   size = "${ var.size }-${ var.cpus }vcpu-${ var.memory }"
   ssh_keys = [ "${ digitalocean_ssh_key.vm-ssh-key.fingerprint }" ]
 
-  count = 1
-
   backups = false
   monitoring = false
   private_networking = false
