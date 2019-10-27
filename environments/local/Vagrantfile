@@ -1,0 +1,105 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+DIR = File.dirname(__FILE__)
+
+
+PROVISIONER = 'shell'
+PROVISION_ROOT_PATH = "#{DIR}"
+VAGRANT_DOTFILE_PATH = File.join( Dir.pwd, '.vagrant' )
+REMOTE_SOURCE_PATH_LINUX = '/tmp'
+MOUNT_PATH_LINUX = '/mnt/host'
+SSH_PUB_KEY = File.read( ENV[ 'VM_SSH_PUB_KEY_PATH' ] )
+DOMAIN = 'vagrant.local'
+USERNAME = ENV[ 'VM_PRIVILEGED_USERNAME' ]
+
+
+
+machines = [
+    {
+        'name' => 'local-dev-env',
+        'cores' => 1,
+        'memory' => 1024,
+        'aliases' => [
+            'example'
+        ]
+    }
+]
+
+
+Vagrant.configure('2') do |config|
+
+    if Vagrant.has_plugin?( "vagrant-vbguest" )
+        config.vbguest.auto_update = true
+        config.vbguest.no_remote = true
+    else
+        raise "Vagrant Plugin 'vbguest' plugin is required"
+    end
+
+    if Vagrant.has_plugin?( "vagrant-hostmanager" )
+        config.hostmanager.enabled = true
+        config.hostmanager.manage_host = true
+        config.hostmanager.manage_guest = true
+        config.hostmanager.ignore_private_ip = false
+    else
+        raise "Vagrant Plugin 'HostManager' is required"
+    end
+
+
+    config.vm.box = 'ubuntu/bionic64'
+    config.vm.box_version = '20191023.0.0'
+
+
+    machines.each_with_index do |m, i|
+
+        id = "#{ m['name'] }"
+
+        config.vm.define id do |node|
+
+            node.vm.provider "virtualbox" do |vb|
+                vb.name = id
+                vb.memory = m['memory']
+                vb.cpus = m['cores']
+                vb.customize [ "modifyvm", id, "--uartmode1", "file", File.join( Dir.pwd, 'ubuntu-cloudimg-console.log' ) ]
+            end
+
+            node.vm.hostname = "#{ m['name'] }.#{ DOMAIN }"
+            m['aliases'] != nil && node.hostmanager.aliases = m['aliases'].map { |a| "#{ a }.#{ DOMAIN }" }
+
+            node.vm.provision 'shell', inline: 'sed -i -e "/^127.0.0.1\\t"$(hostname)"/d" /etc/hosts', privileged: true
+
+
+            node.vm.network 'private_network',
+                            ip: "10.23.42.10",
+                            :adapter => 2
+
+
+            node.vm.synced_folder "#{DIR}", '/vagrant', disabled: true
+            node.vm.synced_folder PROVISION_ROOT_PATH, MOUNT_PATH_LINUX
+
+
+            node.vm.provision 'shell',
+                              privileged: true,
+                              inline: [
+                                  "useradd --shell /bin/bash --home-dir /home/#{ USERNAME } --expiredate '' --password '#{ 'p@sSw0rd' }' #{ USERNAME }",
+                                  "echo '#{ USERNAME } ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers",
+                                  "mkdir -p /home/#{ USERNAME }/.ssh",
+                                  "echo '#{SSH_PUB_KEY}' >> /home/#{ USERNAME }/.ssh/authorized_keys",
+                                  "chmod -R 700 /home/#{ USERNAME }/.ssh && chown -R #{ USERNAME }:#{ USERNAME } /home/#{ USERNAME }/.ssh"
+                              ].join("\n")
+
+            node.vm.provision 'shell',
+                              privileged: true,
+                              inline: [
+                                  "export DEBIAN_FRONTEND=noninteractive",
+                                  "apt update",
+                                  "apt install -y python3 && ln -s /usr/bin/python3 /usr/bin/python",
+                                  "apt install -y python3-pip && ln -s /usr/bin/pip3 /usr/bin/pip"
+                              ].join("\n")
+
+        end
+
+    end
+
+
+end
