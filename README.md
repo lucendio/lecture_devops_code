@@ -1,24 +1,22 @@
-Terrafrom on mobile POC
-=======================
-
-This projects aims to implement a proof-of-concepts to allocate and provision virtual private 
-cloud applications from a mobile device.
+Lecture: DevOps - Code Examples
+===============================
 
 
-## Requirements
+This repository contains executable code that is meant to serve as examples
+for the __DevOps__ lecture as part of the master's studies.
+
+
+## Example: Terraform
+
+### Requirements
 
 *   `make`
-*   `terrafrom`
+*   `openssh`
+*   `terraform`
+*   r/w supporting DigitalOcean API token (`./.credentials/do-api-token`)
 
 
-## Preparations
-
-Create the file `./.credentials/do-api-token` and add a r/w supporting DigitalOcean API token
-
-
-## How to use
-
-0. make sure you already took care of the preparations 
+### How to use
 
 1. `make init`
     *   generates an ssh key pair
@@ -33,3 +31,29 @@ Create the file `./.credentials/do-api-token` and add a r/w supporting DigitalOc
 4. `make clean`
     *   destroys all allocated resources on DigitalOcean
     *   removes all terraform files created during runtime 
+
+
+## Example: Vagrant
+
+### Requirements
+
+*   `make`
+*   `openssh`
+*   `vagrant`
+*   VirtualBox
+
+
+### How to use
+
+1. `make vm-prerequisites`
+    *   installs depending vagrant plugins
+
+2. `make vm-allocate`
+    *   spins up and prepares a local virtual machine 
+
+3. `make vm-connect`
+    *   opens ssh connection to the virtual machine
+
+4. `make vm-clean`
+    *   destroys the local virtual machine
+    *   removes all vagrant files and logs created during runtime 
