@@ -1,0 +1,7 @@
+example:
+  hosts:
+    dev-env.vagrant.local: {}
+  vars:
+    example:
+      fqdn: "example.{{ domain }}"
+      port: 2342

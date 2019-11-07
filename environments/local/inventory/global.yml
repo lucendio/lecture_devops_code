@@ -1,0 +1,9 @@
+all:
+  hosts:
+    dev-env.vagrant.local: {}
+  vars:
+    domain: vagrant.local
+    vhost_config_dir: '/etc/nginx/conf.d'
+    configuration_directory: '/usr/local/etc'
+    data_directory: '/mnt/data'
+

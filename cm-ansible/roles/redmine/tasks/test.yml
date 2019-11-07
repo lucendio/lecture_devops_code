@@ -1,0 +1,32 @@
+- name: "verifying that container '{{ name }}-db' started successfully"
+  command: >
+      docker ps
+        --filter name={{ name }}-db
+        --filter status=created
+        --filter status=restarting
+        --filter status=running
+        --format "{{'{{'}}.Status{{'}}'}}"
+  retries: 6
+  delay: 2
+  register: result
+  until: result.stdout_lines | length > 0
+
+- name: "verifying that container '{{ name }}-db' started successfully"
+  command: >
+    docker ps
+      --filter name={{ name }}-app
+      --filter status=created
+      --filter status=restarting
+      --filter status=running
+      --format "{{'{{'}}.Status{{'}}'}}"
+  retries: 6
+  delay: 2
+  register: result
+  until: result.stdout_lines | length > 0
+
+- name: "verifying that service '{{ name }}' is available"
+  uri:
+    url: "http://127.0.0.1:{{ port }}"
+    timeout: 6
+  register: response
+  failed_when: response.status != 200

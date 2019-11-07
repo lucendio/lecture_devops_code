@@ -6,3 +6,5 @@
 .terraform
 .credentials
 /terraform.*
+
+*.log

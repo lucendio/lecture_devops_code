@@ -25,6 +25,13 @@ export VAGRANT_DOTFILE_PATH = $(MKFILE_DIR)/.vagrant
 export VAGRANT_CWD = $(MKFILE_DIR)/environments/local
 
 
+ENVIRONMENT ?= local
+PLAYBOOK ?= main
+
+export ANSIBLE_LOG_PATH = $(MKFILE_DIR)/ansible.log
+export ANSIBLE_ROLES_PATH = $(MKFILE_DIR)/cm-ansible/roles
+
+
 
 default: init allocate
 
@@ -149,7 +156,7 @@ vm-connect:
 		-p 22 \
 		-l $(PRIVILEGED_USERNAME) \
 		-i $(SSH_KEY_PAIR_PATH).prv \
-		local-dev-env.vagrant.local
+		dev-env.vagrant.local
 
 
 .PHONY: vm-start
@@ -171,3 +178,51 @@ vm-clean:
 	rm -rf \
 		$(VAGRANT_DOTFILE_PATH) \
 		$(MKFILE_DIR)/*.log
+
+
+
+.PHONY: facts
+.SILENT: facts
+facts: export ANSIBLE_CONFIG = $(MKFILE_DIR)/environments/$(ENVIRONMENT)/ansible.cfg
+facts:
+	ansible \
+		--module-name=setup \
+		--inventory=$(MKFILE_DIR)/environments/$(ENVIRONMENT)/inventory \
+		all
+
+.PHONY: vars
+.SILENT: vars
+vars: export ANSIBLE_CONFIG = $(MKFILE_DIR)/environments/$(ENVIRONMENT)/ansible.cfg
+vars:
+	ansible \
+		--module-name=debug \
+		--args="var=vars" \
+		--inventory=$(MKFILE_DIR)/environments/$(ENVIRONMENT)/inventory \
+		all
+
+.PHONY: check
+.SILENT: check
+check:
+	ansible-playbook \
+		--syntax-check \
+		--inventory=$(MKFILE_DIR)/environments/$(ENVIRONMENT)/inventory \
+		$(MKFILE_DIR)/cm-ansible/playbooks/$(PLAYBOOK).yaml
+
+
+.PHONY: bootstrap
+.SILENT: bootstrap
+bootstrap:
+	mkdir -p $(MKFILE_DIR)/.logs
+	ansible-playbook \
+		--inventory=$(MKFILE_DIR)/environments/$(ENVIRONMENT)/inventory \
+		$(MKFILE_DIR)/cm-ansible/playbooks/$(PLAYBOOK).yaml
+
+
+.PHONY: local
+.SILENT: local
+local: ENVIRONMENT = local
+local: export ANSIBLE_CONFIG = $(MKFILE_DIR)/environments/$(ENVIRONMENT)/ansible.cfg
+local: bootstrap
+
+test-local: PLAYBOOK = test
+test-local: local

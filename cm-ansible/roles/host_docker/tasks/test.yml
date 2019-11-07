@@ -1,0 +1,6 @@
+- name: "verifying that docker started successfully"
+  command: "systemctl is-active docker"
+  retries: 6
+  delay: 2
+  register: result
+  until: result.stdout == "active"

@@ -1,0 +1,15 @@
+- hosts: reverse_proxy
+  vars:
+    conf_dir: "{{ vhost_config_dir }}"
+  tasks:
+    - import_role:
+        name: host_reverse-proxy
+        tasks_from: test
+
+- hosts: container_engine
+  vars:
+    version: "{{ docker.version }}"
+  tasks:
+    - import_role:
+        name: host_docker
+        tasks_from: test

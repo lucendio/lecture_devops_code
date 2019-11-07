@@ -1,0 +1,26 @@
+[Unit]
+Description=Running service: {{ role_name }} containerized
+
+After=docker.service
+Requires=docker.service
+
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+
+ExecStart=/usr/bin/docker run \
+            --name {{ name }} \
+            --publish {{ port }}:{{ nginx_port }} \
+            --volume {{ config_dir }}/{{ name }}/nginx.conf:/etc/nginx/nginx.conf:ro \
+            --volume {{ data_dir }}/{{ name }}/www:/var/www:ro \
+            nginx:{{ nginx_version }}
+
+ExecReload=/usr/bin/docker restart {{ name }}
+
+ExecStop=/usr/bin/docker stop {{ name }}
+ExecStopPost=/usr/bin/docker rm --force {{ name }}
+
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+- name: installing dependencies
+  import_tasks: install.yml
+
+- name: configuring reverse proxy
+  import_tasks: configure.yml
+

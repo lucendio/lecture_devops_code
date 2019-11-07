@@ -1,0 +1,7 @@
+- hosts: redmine
+  vars:
+    port: "{{ redmine.port }}"
+  tasks:
+    - import_role:
+        name: redmine
+        tasks_from: test

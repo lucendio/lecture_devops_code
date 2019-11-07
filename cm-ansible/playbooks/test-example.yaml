@@ -1,0 +1,7 @@
+- hosts: example
+  vars:
+    port: "{{ example.port }}"
+  tasks:
+    - import_role:
+        name: example
+        tasks_from: test

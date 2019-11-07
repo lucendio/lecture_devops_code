@@ -1,0 +1,5 @@
+- name: installing dependencies
+  import_tasks: install.yml
+
+- name: starting docker
+  import_tasks: start.yml

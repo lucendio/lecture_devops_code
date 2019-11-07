@@ -1,0 +1,5 @@
+- name: ensuring existence of data directory
+  file:
+    path: "{{ data_dir }}"
+    state: directory
+    mode: '777'

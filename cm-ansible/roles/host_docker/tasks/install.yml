@@ -1,0 +1,25 @@
+- name: installing key for docker's apt repositpry
+  apt_key:
+    url: "https://download.docker.com/linux/{{ ansible_facts.distribution | lower }}/gpg"
+    id: '0EBFCD88'
+    state: present
+
+- name: installing docker's apt repositpry
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: installing docker packages
+  vars:
+    version_string: "5:{{ version }}~3-0~{{ ansible_distribution | lower }}-{{ ansible_distribution_release }}"
+  package:
+    name:
+      - docker-ce{{ '=' + version_string if version | length > 0 else version }}
+      - docker-ce-cli{{ '=' + version_string if version | length > 0 else version }}
+      - containerd.io
+    state: present
+
+- name: installing pip package for docker
+  pip:
+    name:
+      - docker

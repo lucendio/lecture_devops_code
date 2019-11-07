@@ -1,0 +1,5 @@
+- import_playbook: test-host-dependencies.yaml
+
+#- import_playbook: test-example.yaml
+
+- import_playbook: test-redmine.yaml

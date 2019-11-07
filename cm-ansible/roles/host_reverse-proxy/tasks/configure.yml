@@ -1,0 +1,24 @@
+- name: configuring nginx
+  copy:
+    src: nginx.conf
+    dest: "{{ conf_path }}"
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - configuration changed
+
+- name: deleting nginx default site
+  file:
+    path: "{{ conf_dir }}/default"
+    state: absent
+
+- name: removing nginx sites-enabled directory
+  file:
+    path: "{{ sites_enabled_dir }}"
+    state: absent
+
+- name: removing nginx sites-available directory
+  file:
+    path: "{{ sites_available_dir }}"
+    state: absent

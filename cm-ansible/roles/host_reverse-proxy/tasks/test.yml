@@ -1,0 +1,6 @@
+- name: "verifying that nginx started successfully"
+  command: "systemctl is-active nginx"
+  retries: 6
+  delay: 2
+  register: result
+  until: result.stdout == "active"

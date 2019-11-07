@@ -1,0 +1,13 @@
+- name: "verifying that service '{{ name }}' started successfully"
+  command: "systemctl is-active {{ name }}"
+  retries: 6
+  delay: 2
+  register: result
+  until: result.stdout == "active"
+
+- name: "verifying that service '{{ name }}' is available"
+  uri:
+    url: "http://127.0.0.1:{{ port }}/healthz"
+    timeout: 6
+  register: response
+  failed_when: response.status != 200

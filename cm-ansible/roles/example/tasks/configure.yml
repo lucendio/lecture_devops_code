@@ -1,0 +1,25 @@
+- name: creating configuration directory
+  file:
+    path: "{{ config_dir }}/{{ name }}"
+    state: directory
+    mode: '755'
+
+- name: copying nginx configuration
+  template:
+    src: 'nginx.conf.j2'
+    dest: "{{ config_dir }}/{{ name }}/nginx.conf"
+    mode: '644'
+  notify:
+    - configuration changed
+
+- name: creating data directory
+  file:
+    path: "{{ data_dir }}/{{ name }}/www"
+    state: directory
+    mode: '755'
+
+- name: copying static file
+  copy:
+    src: 'static.html'
+    dest: "{{ data_dir }}/{{ name }}/www/static.html"
+    mode: '644'

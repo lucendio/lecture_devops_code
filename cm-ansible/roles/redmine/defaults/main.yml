@@ -1,0 +1,13 @@
+name: "{{ role_name }}"
+fqdn: "{{ role_name }}.domain.tld"
+
+redmine_version: '3.4.11'
+redmine_port: 3000
+
+mysql_version: '5.6.45'
+mysql_port: '3306'
+mysql_hostname: 'redmine-db'
+mysql_datadir: '/data/mysql'
+
+conf_dir: '/etc'
+data_dir: '/data'

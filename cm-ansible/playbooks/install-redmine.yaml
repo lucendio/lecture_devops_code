@@ -1,0 +1,10 @@
+- hosts: redmine
+  vars:
+    fqdn: "{{ redmine.fqdn }}"
+    port: "{{ redmine.port }}"
+    vhost_dir: "{{ vhost_config_dir }}"
+    conf_dir: "{{ configuration_directory }}"
+    data_dir: "{{ data_directory }}"
+  tasks:
+    - import_role:
+        name: redmine

@@ -1,0 +1,7 @@
+redmine:
+  hosts:
+    dev-env.vagrant.local: {}
+  vars:
+    redmine:
+      fqdn: "redmine.{{ domain }}"
+      port: 3030

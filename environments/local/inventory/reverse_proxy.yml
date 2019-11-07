@@ -1,0 +1,4 @@
+reverse_proxy:
+  hosts:
+    dev-env.vagrant.local: {}
+  vars: {}

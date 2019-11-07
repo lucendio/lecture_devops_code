@@ -1,0 +1,17 @@
+- name: ensuring container availability (redmine)
+  docker_image:
+    name: docker.io/redmine
+    tag: "{{ redmine_version }}"
+    tls: yes
+    state: present
+    timeout: 8
+    http_timeout: 8
+
+- name: ensuring container availability (mysql)
+  docker_image:
+    name: docker.io/mysql
+    tag: "{{ mysql_version }}"
+    tls: yes
+    state: present
+    timeout: 8
+    http_timeout: 8

@@ -17,11 +17,12 @@ USERNAME = ENV[ 'VM_PRIVILEGED_USERNAME' ]
 
 machines = [
     {
-        'name' => 'local-dev-env',
-        'cores' => 1,
-        'memory' => 1024,
+        'name' => 'dev-env',
+        'cores' => 2,
+        'memory' => 2048,
         'aliases' => [
-            'example'
+            'example',
+            'redmine'
         ]
     }
 ]
@@ -85,7 +86,7 @@ Vagrant.configure('2') do |config|
                                   "echo '#{ USERNAME } ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers",
                                   "mkdir -p /home/#{ USERNAME }/.ssh",
                                   "echo '#{SSH_PUB_KEY}' >> /home/#{ USERNAME }/.ssh/authorized_keys",
-                                  "chmod -R 700 /home/#{ USERNAME }/.ssh && chown -R #{ USERNAME }:#{ USERNAME } /home/#{ USERNAME }/.ssh"
+                                  "chmod -R 700 /home/#{ USERNAME }/.ssh && chown -R #{ USERNAME }:#{ USERNAME } /home/#{ USERNAME }"
                               ].join("\n")
 
             node.vm.provision 'shell',

@@ -1,0 +1,55 @@
+- name: creating virtual network
+  docker_network:
+    name: "{{ name }}"
+    scope: 'local'
+
+- name: starting mysql service
+  docker_container:
+    image: "docker.io/mysql:{{ mysql_version }}"
+    name: "{{ name }}-db"
+    hostname: "{{ mysql_hostname }}"
+    state: started
+    recreate: 'yes'
+    restart_policy: always
+    volumes:
+     - "{{ conf_dir }}/{{ name }}/mysql_conf.d/my.cnf:/etc/mysql/mysql.conf.d/mzsql.cnf:ro"
+     - "{{ data_dir }}/{{ name }}/mysql_datadir:{{ mysql_datadir }}:rw"
+    env:
+      MYSQL_ROOT_PASSWORD: "p@sSw0rd"
+      MYSQL_DATABASE: 'redmine'
+      MYSQL_USER: 'redmine'
+      MYSQL_PASSWORD: 'redmine'
+    cpu_shares: 512
+    memory: 1024M
+    network_mode: 'bridge'
+    networks:
+      - name: "{{ name }}"
+        aliases: "{{ mysql_hostname }}"
+    networks_cli_compatible: 'yes'
+    purge_networks: 'yes'
+
+- name: starting redmine service
+  docker_container:
+    image: "docker.io/redmine:{{ redmine_version }}"
+    name: "{{ name }}-app"
+    state: started
+    recreate: 'yes'
+    restart_policy: always
+    published_ports:
+     - "{{ port }}:{{ redmine_port }}"
+    volumes:
+      - "{{ data_dir }}/{{ name }}/redmine_files:/usr/src/redmine/files:rw"
+      - "{{ data_dir }}/{{ name }}/redmine_plugins:/usr/src/redmine/plugins:rw"
+    env:
+      REDMINE_DB_MYSQL: "{{ mysql_hostname }}"
+      REDMINE_DB_PORT: "{{ mysql_port }}"
+      REDMINE_DB_DATABASE: 'redmine'
+      REDMINE_DB_USERNAME: 'redmine'
+      REDMINE_DB_PASSWORD: 'redmine'
+    cpu_shares: 512
+    memory: 256M
+    network_mode: 'bridge'
+    networks:
+      - name: "{{ name }}"
+    networks_cli_compatible: 'yes'
+    purge_networks: 'yes'

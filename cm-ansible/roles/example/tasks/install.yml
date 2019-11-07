@@ -1,0 +1,22 @@
+- name: ensuring container availability
+  docker_image:
+    name: docker.io/nginx
+    tag: "{{ nginx_version }}"
+    tls: yes
+    state: present
+    #container_limits:     # limit resources during build
+    #  cpushares: 1024     # relative, 1024 equals 1 CPU core
+    #  memory: 104857600   # Bytes, default: 4194304 (equals 4MiB)
+    timeout: 8
+    http_timeout: 8
+
+- name: copying systemd service unit
+  template:
+    src: 'service.unit.j2'
+    dest: "/etc/systemd/system/{{ name }}.service"
+    owner: root
+    group: root
+    mode: '644'
+  register: unit
+  notify:
+    - configuration changed

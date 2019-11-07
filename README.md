@@ -57,3 +57,36 @@ for the __DevOps__ lecture as part of the master's studies.
 4. `make vm-clean`
     *   destroys the local virtual machine
     *   removes all vagrant files and logs created during runtime 
+
+
+## Example: Ansible 
+
+### Requirements
+
+*   `make`
+*   `ansible` v2.8.x
+*   per default the target host is the one provisioned in __Example: Vagrant__,
+    so unless another host has been added in the inventory, it is required to 
+    allocate the local virtual machine first before applying the environment 
+    configuration with Ansible
+    
+### Project structure
+
+*   `./environments/local/inventory` contains all arguments for the local 
+    environment
+*   `./cm-ansible/roles` contains the whole state definition and logic
+*   `./cm-ansible/playbooks` 
+
+### How to use
+
+0. `make vm` (optional, if not already done)
+    * spins up the local virtual machine
+
+1. `make local`
+    * applies configuration for the local environment
+    
+2.  `make test-local`
+    * executes all tests defined in the respective roles
+    
+Please note that the `Makefile` contains some more "sub-commands" (aka *target*)
+worth checking out regarding Ansible, like `facts`, `vars` or `check`.

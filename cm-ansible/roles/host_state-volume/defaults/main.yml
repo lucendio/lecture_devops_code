@@ -1,0 +1,3 @@
+# can be overridden by inventory
+
+data_dir: '/data'

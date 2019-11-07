@@ -1,0 +1,30 @@
+- name: creating data directory (redmine) on host
+  file:
+    path: "{{ data_dir }}/{{ name }}/redmine_files"
+    state: directory
+    mode: '755'
+
+- name: creating plugin directory (redmine) on host
+  file:
+    path: "{{ data_dir }}/{{ name }}/redmine_plugins"
+    state: directory
+    mode: '755'
+
+
+- name: creating configuration directory (mysql) on host
+  file:
+    path: "{{ conf_dir }}/{{ name }}/mysql_conf.d"
+    state: directory
+    mode: '755'
+
+- name: creating data directory (mysql) on host
+  file:
+    path: "{{ data_dir }}/{{ name }}/mysql_datadir"
+    state: directory
+    mode: '755'
+
+- name: copying mysql configuration
+  template:
+    src: 'my.cnf.j2'
+    dest: "{{ conf_dir }}/{{ name }}/mysql_conf.d/my.cnf"
+    mode: '644'

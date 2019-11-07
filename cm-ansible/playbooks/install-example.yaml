@@ -1,0 +1,12 @@
+#- import_playbook: install-host-dependencies.yaml
+
+- hosts: example
+  vars:
+    fqdn: "{{ example.fqdn }}"
+    port: "{{ example.port }}"
+    vhost_dir: "{{ vhost_config_dir }}"
+    config_dir: "{{ configuration_directory }}"
+    data_dir: "{{ data_directory }}"
+  tasks:
+    - import_role:
+        name: example

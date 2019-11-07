@@ -1,0 +1,20 @@
+- hosts: all
+  vars:
+    data_dir: "{{ data_directory }}"
+  tasks:
+    - import_role:
+        name: host_state-volume
+
+- hosts: reverse_proxy
+  vars:
+    conf_dir: "{{ vhost_config_dir }}"
+  tasks:
+    - import_role:
+        name: host_reverse-proxy
+
+- hosts: container_engine
+  vars:
+    version: "{{ docker.version }}"
+  tasks:
+    - import_role:
+        name: host_docker

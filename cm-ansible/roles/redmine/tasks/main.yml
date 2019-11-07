@@ -1,0 +1,11 @@
+- name: installing service
+  import_tasks: install.yml
+
+- name: configuring service
+  import_tasks: configure.yml
+
+- name: starting service
+  import_tasks: start.yml
+
+- name: exposing service
+  import_tasks: ingress.yml
