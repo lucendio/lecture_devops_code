@@ -3,7 +3,7 @@
 name: "{{ role_name }}"
 fqdn: "{{ role_name }}.domain.tld"
 vhost_dir: '/tmp'
-config_dir: '/etc'
+conf_dir: '/etc'
 data_dir: '/data'
 
 nginx_version: 'stable'

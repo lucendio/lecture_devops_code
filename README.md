@@ -40,7 +40,7 @@ for the __DevOps__ lecture as part of the master's studies.
 *   `make`
 *   `openssh`
 *   `vagrant`
-*   VirtualBox
+*   VirtualBox (+ Extension Pack and Guest Additions)
 
 
 ### How to use

@@ -4,7 +4,7 @@
     dest: "{{ conf_path }}"
     owner: root
     group: root
-    mode: 0640
+    mode: '640'
   notify:
     - configuration changed
 

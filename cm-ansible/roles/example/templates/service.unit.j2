@@ -12,7 +12,7 @@ Restart=always
 ExecStart=/usr/bin/docker run \
             --name {{ name }} \
             --publish {{ port }}:{{ nginx_port }} \
-            --volume {{ config_dir }}/{{ name }}/nginx.conf:/etc/nginx/nginx.conf:ro \
+            --volume {{ conf_dir }}/{{ name }}/nginx.conf:/etc/nginx/nginx.conf:ro \
             --volume {{ data_dir }}/{{ name }}/www:/var/www:ro \
             nginx:{{ nginx_version }}
 

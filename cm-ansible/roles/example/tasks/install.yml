@@ -4,6 +4,7 @@
     tag: "{{ nginx_version }}"
     tls: yes
     state: present
+    source: pull
     #container_limits:     # limit resources during build
     #  cpushares: 1024     # relative, 1024 equals 1 CPU core
     #  memory: 104857600   # Bytes, default: 4194304 (equals 4MiB)

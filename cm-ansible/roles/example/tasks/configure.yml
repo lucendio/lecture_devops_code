@@ -1,13 +1,13 @@
 - name: creating configuration directory
   file:
-    path: "{{ config_dir }}/{{ name }}"
+    path: "{{ conf_dir }}/{{ name }}"
     state: directory
     mode: '755'
 
 - name: copying nginx configuration
   template:
     src: 'nginx.conf.j2'
-    dest: "{{ config_dir }}/{{ name }}/nginx.conf"
+    dest: "{{ conf_dir }}/{{ name }}/nginx.conf"
     mode: '644'
   notify:
     - configuration changed

@@ -161,11 +161,15 @@ vm-connect:
 
 .PHONY: vm-start
 .SILENT: vm-start
+vm-start: export VM_PRIVILEGED_USERNAME = $(PRIVILEGED_USERNAME)
+vm-start: export VM_SSH_PUB_KEY_PATH = $(SSH_KEY_PAIR_PATH).pub
 vm-start:
 	vagrant up --no-provision
 
 .PHONY: vm-stop
 .SILENT: vm-stop
+vm-stop: export VM_PRIVILEGED_USERNAME = $(PRIVILEGED_USERNAME)
+vm-stop: export VM_SSH_PUB_KEY_PATH = $(SSH_KEY_PAIR_PATH).pub
 vm-stop:
 	vagrant halt
 
