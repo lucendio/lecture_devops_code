@@ -1,0 +1,26 @@
+- name: generating virtual host configuration
+  template:
+    src: vhost.conf.j2
+    dest: "{{ vhost_dir }}/{{ fqdn }}.conf"
+    owner: root
+    group: root
+    mode: '644'
+  register: vhost
+
+- block:
+  - name: reloading reverse proxy service
+    service:
+      name: nginx
+      enabled: yes
+      state: reloaded
+    when: vhost.changed
+  rescue:
+  - name: deleting flawed virtual host configuration
+    file:
+      path: "{{ vhost_dir }}/{{ fqdn }}.conf"
+      state: absent
+  - name: reloading reverse proxy service w/o virtual host configuration file
+    service:
+      name: nginx
+      enabled: yes
+      state: reloaded

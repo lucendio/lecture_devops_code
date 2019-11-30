@@ -1,0 +1,2 @@
+- name: configuration changed
+  include_tasks: ./../tasks/start.yml

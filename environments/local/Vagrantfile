@@ -22,7 +22,8 @@ machines = [
         'memory' => 2048,
         'aliases' => [
             'example',
-            'redmine'
+            'redmine',
+            'jenkins'
         ]
     }
 ]

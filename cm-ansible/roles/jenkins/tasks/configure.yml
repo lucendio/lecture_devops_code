@@ -1,0 +1,87 @@
+- name: creating configuration directory
+  file:
+    path: "{{ conf_dir }}"
+    state: directory
+    mode: '755'
+
+- name: copying environment variables
+  template:
+    src: 'service-vars.env.j2'
+    dest: "{{ conf_dir }}/master-vars.env"
+    mode: '644'
+  notify:
+    - configuration changed
+
+- name: copying agent's environment variables
+  when: agent_secret | length > 0
+  template:
+    src: 'agent-vars.env.j2'
+    dest: "{{ conf_dir }}/agent-vars.env"
+    mode: '644'
+  notify:
+    - configuration changed
+
+
+- name: creating data directory
+  file:
+    path: "{{ data_dir }}"
+    state: directory
+    mode: '755'
+
+- name: setting root url
+  template:
+    src: 'jenkins.model.JenkinsLocationConfiguration.xml.j2'
+    dest: "{{ data_dir }}/jenkins.model.JenkinsLocationConfiguration.xml"
+    mode: '644'
+  notify:
+    - configuration changed
+
+- name: creating groovy scripts folder in data directory
+  file:
+    path: "{{ data_dir }}/init.groovy.d"
+    state: directory
+    mode: '755'
+
+- name: "checking if {{ name }} was already finalized"
+  stat:
+    path: "{{ data_dir }}/jenkins.install.UpgradeWizard.state"
+  register: wizard
+- name: copying groovy script to sets default password
+  when: not wizard.stat.exists
+  template:
+    src: 'basic-security.groovy.j2'
+    dest: "{{ data_dir }}/init.groovy.d/basic-security.groovy"
+    mode: '644'
+  notify:
+    - configuration changed
+
+- name: creating plugins folder in data directory
+  file:
+    path: "{{ data_dir }}/plugins"
+    state: directory
+    mode: '755'
+  notify:
+    - configuration changed
+
+- name: checking if plugins are already installed
+  find:
+    paths: "{{ data_dir }}/plugins/"
+  register: plugins_dir
+- name: removing all stopped containers
+  when: plugins_dir.matched <= 0
+  command: >
+    docker container prune --force
+- name: installing jenkins plugins
+  when: plugins_dir.matched <= 0
+  args:
+    stdin: "{{ lookup( 'file', './' + plugin_list ) }}"
+  command: >
+    docker run
+      --name {{ name }}-plugin-installer
+      --entrypoint /usr/local/bin/install-plugins.sh
+      --user root
+      --volume {{ data_dir }}/plugins:/usr/share/jenkins/ref/plugins:rw
+      --memory 1024Mi
+      --cpu-shares 512
+      --interactive
+      docker.io/jenkins/jenkins:{{ version }}

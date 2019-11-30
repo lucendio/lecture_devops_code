@@ -1,0 +1,32 @@
+[Unit]
+Description=Running service: {{ master_name }} containerized
+
+After=docker.service
+Requires=docker.service
+
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+
+ExecStart=/usr/bin/docker run \
+            --name {{ master_name }} \
+            --user root \
+            --publish {{ port }}:8080 \
+            --publish {{ jnlp }}:{{ jnlp }} \
+            --env-file {{ conf_dir }}/master-vars.env \
+            --volume {{ data_dir }}:/var/jenkins_home:rw \
+            --network {{ name }} \
+            --network-alias {{ master_name }} \
+            --memory 1024Mi \
+            --cpu-shares 1024 \
+            jenkins/jenkins:{{ version }}
+
+ExecReload=/usr/bin/docker restart {{ master_name }}
+
+ExecStop=/usr/bin/docker stop {{ master_name }}
+ExecStopPost=/usr/bin/docker rm --force {{ master_name }}
+
+
+[Install]
+WantedBy=multi-user.target

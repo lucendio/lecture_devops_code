@@ -1,0 +1,29 @@
+- name: waiting for jenkins to start up
+  uri:
+    url: "http://127.0.0.1:{{ port }}/cli"
+    timeout: 6
+    force: 'yes'
+    status_code:
+      - -1
+      - 403
+      - 111
+      - 200
+  register: response
+  until: >
+    (response.status == 200 or response.status == 403)
+    and response.msg.find('Please wait while') == -1
+  retries: 30
+  delay: 4
+  changed_when: False
+  check_mode: 'no'
+
+- name: preventing wizard from showing up
+  copy:
+    content: '2.0'
+    dest: "{{ data_dir }}/jenkins.install.UpgradeWizard.state"
+    mode: '644'
+
+- name: removing groovy script that sets default password
+  file:
+    path: "{{ data_dir }}/init.groovy.d/basic-security.groovy"
+    state: absent

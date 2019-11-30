@@ -1,0 +1,8 @@
+jenkins:
+  hosts:
+    dev-env.vagrant.local: {}
+  vars:
+    jenkins:
+      fqdn: "jenkins.{{ domain }}"
+      port: 3040
+      version: '2.204'

@@ -1,0 +1,7 @@
+- hosts: jenkins
+  vars:
+    port: "{{ jenkins.port }}"
+  tasks:
+    - import_role:
+        name: jenkins
+        tasks_from: test

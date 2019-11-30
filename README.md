@@ -69,7 +69,7 @@ for the __DevOps__ lecture as part of the master's studies.
     so unless another host has been added in the inventory, it is required to 
     allocate the local virtual machine first before applying the environment 
     configuration with Ansible
-    
+
 ### Project structure
 
 *   `./environments/local/inventory` contains all arguments for the local 
@@ -90,3 +90,28 @@ for the __DevOps__ lecture as part of the master's studies.
     
 Please note that the `Makefile` contains some more "sub-commands" (aka *target*)
 worth checking out regarding Ansible, like `facts`, `vars` or `check`.
+
+
+## Example: Jenkins
+
+### Requirements
+
+Please refer to *Example: Ansible*
+
+### Project structure
+
+See `cm-ansible/roles/jenkins/README.md` for mor information. Examples for pipelines can be found in `./cicd`
+
+### How to use
+
+0. Install Jenkins with the help of Ansible (see playbook `main.yaml`)
+
+### Add a node
+
+1. Create a node via Jenkins UI:
+   Manage Jenkins > Manage Nodes > New Node > Node name: `agent_name` (Ansible variable) + *Permanent Agent* > 
+   Launch method: *Launch agent by connecting it to the master* > *Save*
+   
+2. Obtain agent secret by selecting node from list & set `agent_secret` in Jenkins inventory file accordingly
+
+3. Apply changes via Ansible

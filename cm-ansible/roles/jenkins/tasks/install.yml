@@ -1,0 +1,42 @@
+- name: ensuring container availability - master
+  docker_image:
+    name: docker.io/jenkins/jenkins
+    tag: "{{ version }}"
+    state: present
+    source: pull
+
+- name: ensuring container availability - agent
+  docker_image:
+    name: docker.io/jenkins/jnlp-agent-docker
+    tag: 'latest'
+    state: present
+    source: pull
+
+- name: creating virtual network
+  docker_network:
+    name: "{{ name }}"
+    state: present
+    scope: 'local'
+
+- name: copying systemd service unit
+  template:
+    src: 'service.unit.j2'
+    dest: "/etc/systemd/system/{{ name }}.service"
+    owner: root
+    group: root
+    mode: '644'
+  register: unit
+  notify:
+    - configuration changed
+
+- name: copying agent's systemd service unit
+  when: agent_secret | length > 0
+  template:
+    src: 'agent.unit.j2'
+    dest: "/etc/systemd/system/agent.service"
+    owner: root
+    group: root
+    mode: '644'
+  register: unit_agent
+  notify:
+    - configuration changed

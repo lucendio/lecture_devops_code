@@ -1,0 +1,21 @@
+# can be overridden by inventory
+
+name: "{{ role_name }}"
+fqdn: "{{ role_name }}.domain.tld"
+vhost_dir: "{{ vhost_config_dir }}"
+conf_dir: "{{ configuration_directory }}/{{ name }}"
+data_dir: "{{ data_directory }}/{{ name }}"
+
+version: 'lts'
+port: 8080
+jnlp: 50000
+home_dir: '/var/lib/jenkins'
+plugin_list: 'plugins.must.txt'
+url: "http://{{ fqdn }}"
+
+master_name: "{{ name }}-master"
+agent_name: "{{ name }}-agent"
+agent_secret: ''
+
+admin_username: 'admin'
+admin_password: 'admin'

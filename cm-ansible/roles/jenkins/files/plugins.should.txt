@@ -1,0 +1,17 @@
+# src: https://github.com/jenkinsci/jenkins/blob/master/core/src/main/resources/jenkins/install/platform-plugins.json
+
+build-timeout
+
+warnings-ng
+xunit
+
+github-branch-source
+pipeline-github-lib
+
+role-strategy
+authorize-project
+
+email-ext
+emailext-template
+publish-over-ssh
+ssh

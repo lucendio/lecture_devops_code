@@ -1,0 +1,30 @@
+[Unit]
+Description=Running service: {{ agent_name }} containerized
+
+After=docker.service
+Requires=docker.service
+
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+
+ExecStart=/usr/bin/docker run \
+            --name {{ agent_name }} \
+            --user root \
+            --env-file {{ conf_dir }}/agent-vars.env \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --network {{ name }} \
+            --network-alias {{ agent_name }} \
+            --memory 512Mi \
+            --cpu-shares 128 \
+            jenkins/jnlp-agent-docker:latest
+
+ExecReload=/usr/bin/docker restart {{ agent_name }}
+
+ExecStop=/usr/bin/docker stop {{ agent_name }}
+ExecStopPost=/usr/bin/docker rm --force {{ agent_name }}
+
+
+[Install]
+WantedBy=multi-user.target

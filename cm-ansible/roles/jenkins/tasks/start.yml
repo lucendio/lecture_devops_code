@@ -1,0 +1,17 @@
+- name: "starting {{ name }} service"
+  systemd:
+    name: "{{ name }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: "{{ 'yes' if unit.changed else 'no' }}"
+
+- name: starting agent service
+  when: agent_secret | length > 0
+  systemd:
+    name: 'agent'
+    enabled: yes
+    state: restarted
+    daemon_reload: "{{ 'yes' if unit_agent.changed else 'no' }}"
+
+- name: finalizing service
+  import_tasks: finalize.yml

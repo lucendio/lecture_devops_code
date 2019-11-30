@@ -1,0 +1,9 @@
+- hosts: jenkins
+  vars:
+    fqdn: "{{ jenkins.fqdn }}"
+    port: "{{ jenkins.port }}"
+    version: "{{ jenkins.version }}"
+    agent_secret: "{{ jenkins.agent_secret }}"
+  tasks:
+    - import_role:
+        name: jenkins
