@@ -14,8 +14,8 @@ plugin_list: 'plugins.must.txt'
 url: "http://{{ fqdn }}"
 
 master_name: "{{ name }}-master"
-agent_name: "{{ name }}-agent"
-agent_secret: ''
+jnlp_agent_name: "{{ name }}-agent"
+jnlp_agent_secret: ''
 
 admin_username: 'admin'
 admin_password: 'admin'

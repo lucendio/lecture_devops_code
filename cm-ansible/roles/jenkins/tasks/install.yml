@@ -30,7 +30,7 @@
     - configuration changed
 
 - name: copying agent's systemd service unit
-  when: agent_secret | length > 0
+  when: jnlp_agent_secret | length > 0
   template:
     src: 'agent.unit.j2'
     dest: "/etc/systemd/system/agent.service"

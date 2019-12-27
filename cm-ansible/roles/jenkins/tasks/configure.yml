@@ -13,7 +13,7 @@
     - configuration changed
 
 - name: copying agent's environment variables
-  when: agent_secret | length > 0
+  when: jnlp_agent_secret | length > 0
   template:
     src: 'agent-vars.env.j2'
     dest: "{{ conf_dir }}/agent-vars.env"

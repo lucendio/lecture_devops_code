@@ -6,7 +6,7 @@
     daemon_reload: "{{ 'yes' if unit.changed else 'no' }}"
 
 - name: starting agent service
-  when: agent_secret | length > 0
+  when: jnlp_agent_secret | length > 0
   systemd:
     name: 'agent'
     enabled: yes
