@@ -51,13 +51,15 @@ for the __DevOps__ lecture as part of the master's studies.
 2. `make vm-allocate`
     *   spins up and prepares a local virtual machine 
 
-3. `make vm-connect`
+3. `make vm-status`
+    *   shows the current state of the local virtual machine
+
+4. `make vm-connect`
     *   opens ssh connection to the virtual machine
 
-4. `make vm-clean`
+5. `make vm-clean`
     *   destroys the local virtual machine
     *   removes all vagrant files and logs created during runtime 
-
 
 ## Example: Ansible 
 

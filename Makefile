@@ -173,6 +173,12 @@ vm-stop: export VM_SSH_PUB_KEY_PATH = $(SSH_KEY_PAIR_PATH).pub
 vm-stop:
 	vagrant halt
 
+.PHONY: vm-status
+.SILENT: vm-status
+vm-status: export VM_SSH_PUB_KEY_PATH = $(SSH_KEY_PAIR_PATH).pub
+vm-status:
+	vagrant status
+
 
 .PHONY: vm-clean
 .SILENT: vm-clean
